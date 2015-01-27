@@ -7,7 +7,6 @@ CGFloat const kSwipeableTableViewCellOpenVelocityThreshold = 0.6;
 @interface SwipeableTableViewCell ()
 
 @property (nonatomic) NSArray *buttonViews;
-@property (nonatomic, weak) UIScrollView *scrollView;
 
 @end
 
