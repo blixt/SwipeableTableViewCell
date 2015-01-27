@@ -84,6 +84,21 @@ CGFloat const kSwipeableTableViewCellOpenVelocityThreshold = 0.6;
     return button;
 }
 
+- (void)openSide:(SwipeableTableViewCellSide)side {
+    [self openSide:side animated:YES];
+}
+
+- (void)openSide:(SwipeableTableViewCellSide)side animated:(BOOL)animate {
+    switch (side) {
+        case SwipeableTableViewCellSideLeft:
+            [self.scrollView setContentOffset:CGPointMake(-self.leftInset, 0) animated:animate];
+            break;
+        case SwipeableTableViewCellSideRight:
+            [self.scrollView setContentOffset:CGPointMake(self.rightInset, 0) animated:animate];
+            break;
+    }
+}
+
 #pragma mark Private methods
 
 - (UIView *)createButtonsView {
