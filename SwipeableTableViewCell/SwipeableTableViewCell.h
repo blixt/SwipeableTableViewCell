@@ -27,7 +27,7 @@ extern CGFloat const kSwipeableTableViewCellOpenVelocityThreshold;
 
 + (void)closeAllCells;
 + (void)closeAllCellsExcept:(SwipeableTableViewCell *)cell;
-- (UIButton *)createButtonWithWidth:(CGFloat)width onSide:(SwipeableTableViewCellSide)side;
 - (void)close;
+- (UIButton *)createButtonWithWidth:(CGFloat)width onSide:(SwipeableTableViewCellSide)side;
 
 @end
