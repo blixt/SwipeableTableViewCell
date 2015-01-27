@@ -32,7 +32,7 @@
 #pragma mark UIScrollViewDelegate
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-    [SwipeableTableViewCell hideAllButtons];
+    [SwipeableTableViewCell closeAllCells];
 }
 
 #pragma mark UITableViewDataSource

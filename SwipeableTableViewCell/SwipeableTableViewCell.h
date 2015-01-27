@@ -5,7 +5,7 @@ typedef NS_ENUM(NSUInteger, SwipeableTableViewCellSide) {
     SwipeableTableViewCellSideRight,
 };
 
-extern NSString *const kSwipeableTableViewCellHideButtonsEvent;
+extern NSString *const kSwipeableTableViewCellCloseEvent;
 /**
  * The maximum number of milliseconds that closing the buttons may take after release.
  *
@@ -25,8 +25,9 @@ extern CGFloat const kSwipeableTableViewCellOpenVelocityThreshold;
 @property (nonatomic, weak) UIView *scrollViewContentView;
 @property (nonatomic, weak) UILabel *scrollViewLabel;
 
-+ (void)hideAllButtons;
++ (void)closeAllCells;
++ (void)closeAllCellsExcept:(SwipeableTableViewCell *)cell;
 - (UIButton *)createButtonWithWidth:(CGFloat)width onSide:(SwipeableTableViewCellSide)side;
-- (void)hideButtons;
+- (void)close;
 
 @end

@@ -1,6 +1,6 @@
 #import "SwipeableTableViewCell.h"
 
-NSString *const kSwipeableTableViewCellHideButtonsEvent = @"SwipeableTableViewCellHideButtons";
+NSString *const kSwipeableTableViewCellCloseEvent = @"SwipeableTableViewCellClose";
 CGFloat const kSwipeableTableViewCellMaxCloseMilliseconds = 300;
 CGFloat const kSwipeableTableViewCellOpenVelocityThreshold = 0.6;
 
@@ -32,8 +32,12 @@ CGFloat const kSwipeableTableViewCellOpenVelocityThreshold = 0.6;
 
 #pragma mark Public class methods
 
-+ (void)hideAllButtons {
-    [[NSNotificationCenter defaultCenter] postNotificationName:kSwipeableTableViewCellHideButtonsEvent object:self];
++ (void)closeAllCells {
+    [self closeAllCellsExcept:nil];
+}
+
++ (void)closeAllCellsExcept:(SwipeableTableViewCell *)cell {
+    [[NSNotificationCenter defaultCenter] postNotificationName:kSwipeableTableViewCellCloseEvent object:cell];
 }
 
 #pragma mark Public properties
@@ -50,7 +54,7 @@ CGFloat const kSwipeableTableViewCellOpenVelocityThreshold = 0.6;
 
 #pragma mark Public methods
 
-- (void)hideButtons {
+- (void)close {
     [self.scrollView setContentOffset:CGPointZero animated:YES];
 }
 
@@ -90,6 +94,11 @@ CGFloat const kSwipeableTableViewCellOpenVelocityThreshold = 0.6;
     return view;
 }
 
+- (void)handleCloseEvent:(NSNotification *)notification {
+    if (notification.object == self) return;
+    [self close];
+}
+
 - (void)setUp {
     // Create the scroll view which enables the horizontal swiping.
     UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:self.contentView.bounds];
@@ -119,8 +128,8 @@ CGFloat const kSwipeableTableViewCellOpenVelocityThreshold = 0.6;
 
     // Listen for events that tell cells to hide their buttons.
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(hideButtons)
-                                                 name:kSwipeableTableViewCellHideButtonsEvent
+                                             selector:@selector(handleCloseEvent:)
+                                                 name:kSwipeableTableViewCellCloseEvent
                                                object:nil];
 }
 
@@ -153,7 +162,7 @@ CGFloat const kSwipeableTableViewCellOpenVelocityThreshold = 0.6;
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-    [[self class] hideAllButtons];
+    [[self class] closeAllCellsExcept:self];
 }
 
 - (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset {
