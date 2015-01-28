@@ -119,6 +119,7 @@ CGFloat const kSwipeableTableViewCellOpenVelocityThreshold = 0.6;
     scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     scrollView.contentSize = self.contentView.bounds.size;
     scrollView.delegate = self;
+    scrollView.scrollsToTop = NO;
     scrollView.showsHorizontalScrollIndicator = NO;
     scrollView.showsVerticalScrollIndicator = NO;
     [self.contentView addSubview:scrollView];
