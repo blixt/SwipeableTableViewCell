@@ -41,6 +41,10 @@ CGFloat const kSwipeableTableViewCellOpenVelocityThreshold = 0.6;
 
 #pragma mark Public properties
 
+- (BOOL)closed {
+    return CGPointEqualToPoint(self.scrollView.contentOffset, CGPointZero);
+}
+
 - (CGFloat)leftInset {
     UIView *view = self.buttonViews[SwipeableTableViewCellSideLeft];
     return view.bounds.size.width;

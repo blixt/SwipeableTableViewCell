@@ -20,6 +20,7 @@ extern CGFloat const kSwipeableTableViewCellOpenVelocityThreshold;
 
 @interface SwipeableTableViewCell : UITableViewCell <UIScrollViewDelegate>
 
+@property (nonatomic, readonly) BOOL closed;
 @property (nonatomic, readonly) CGFloat leftInset;
 @property (nonatomic, readonly) CGFloat rightInset;
 @property (nonatomic, weak) UIScrollView *scrollView;
