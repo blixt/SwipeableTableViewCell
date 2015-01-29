@@ -93,6 +93,7 @@ CGFloat const kSwipeableTableViewCellOpenVelocityThreshold = 0.6;
 }
 
 - (void)openSide:(SwipeableTableViewCellSide)side animated:(BOOL)animate {
+    [[self class] closeAllCellsExcept:self];
     switch (side) {
         case SwipeableTableViewCellSideLeft:
             [self.scrollView setContentOffset:CGPointMake(-self.leftInset, 0) animated:animate];
