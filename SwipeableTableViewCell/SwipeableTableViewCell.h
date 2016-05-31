@@ -1,4 +1,5 @@
 #import <UIKit/UIKit.h>
+#import "SwipeableScrollView.h"
 
 typedef NS_ENUM(NSUInteger, SwipeableTableViewCellSide) {
     SwipeableTableViewCellSideLeft,
@@ -23,7 +24,7 @@ extern CGFloat const kSwipeableTableViewCellOpenVelocityThreshold;
 @property (nonatomic, readonly) BOOL closed;
 @property (nonatomic, readonly) CGFloat leftInset;
 @property (nonatomic, readonly) CGFloat rightInset;
-@property (nonatomic, weak) UIScrollView *scrollView;
+@property (nonatomic, weak) SwipeableScrollView *scrollView;
 @property (nonatomic, weak) UIView *scrollViewContentView;
 @property (nonatomic, weak) UILabel *scrollViewLabel;
 

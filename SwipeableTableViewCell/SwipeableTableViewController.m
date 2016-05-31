@@ -93,4 +93,9 @@
     }
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSLog(@"%i",indexPath.row);
+}
+
 @end

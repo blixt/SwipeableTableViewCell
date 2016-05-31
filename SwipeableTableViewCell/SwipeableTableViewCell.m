@@ -5,6 +5,10 @@ CGFloat const kSwipeableTableViewCellMaxCloseMilliseconds = 300;
 CGFloat const kSwipeableTableViewCellOpenVelocityThreshold = 0.6;
 
 @interface SwipeableTableViewCell ()
+{
+    UISwipeGestureRecognizer * swipeGrLeft;
+    UISwipeGestureRecognizer * swipeGrRight;
+}
 
 @property (nonatomic) NSArray *buttonViews;
 
@@ -64,11 +68,11 @@ CGFloat const kSwipeableTableViewCellOpenVelocityThreshold = 0.6;
 - (UIButton *)createButtonWithWidth:(CGFloat)width onSide:(SwipeableTableViewCellSide)side {
     UIView *container = self.buttonViews[side];
     CGSize size = container.bounds.size;
-
+    
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     button.autoresizingMask = UIViewAutoresizingFlexibleHeight;
     button.frame = CGRectMake(size.width, 0, width, size.height);
-
+    
     // Resize the container to fit the new button.
     CGFloat x;
     switch (side) {
@@ -81,11 +85,21 @@ CGFloat const kSwipeableTableViewCellOpenVelocityThreshold = 0.6;
     }
     container.frame = CGRectMake(x, 0, size.width + width, size.height);
     [container addSubview:button];
-
+    
     // Update the scrollable areas outside the scroll view to fit the buttons.
     self.scrollView.contentInset = UIEdgeInsetsMake(0, self.leftInset, 0, self.rightInset);
-
+    
     return button;
+}
+
+- (void)openSideLeft
+{
+    [self openSide:SwipeableTableViewCellSideLeft];
+}
+
+- (void)openSideRigth
+{
+    [self openSide:SwipeableTableViewCellSideRight];
 }
 
 - (void)openSide:(SwipeableTableViewCellSide)side {
@@ -120,7 +134,7 @@ CGFloat const kSwipeableTableViewCellOpenVelocityThreshold = 0.6;
 
 - (void)setUp {
     // Create the scroll view which enables the horizontal swiping.
-    UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:self.contentView.bounds];
+    SwipeableScrollView *scrollView = [[SwipeableScrollView alloc] initWithFrame:self.contentView.bounds];
     scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     scrollView.contentSize = self.contentView.bounds.size;
     scrollView.delegate = self;
@@ -129,23 +143,26 @@ CGFloat const kSwipeableTableViewCellOpenVelocityThreshold = 0.6;
     scrollView.showsVerticalScrollIndicator = NO;
     [self.contentView addSubview:scrollView];
     self.scrollView = scrollView;
-
+    self.scrollView.customDelegate = self;
+    
+    //self.scrollView.userInteractionEnabled = NO;
+    
     // Create the containers which will contain buttons on the left and right sides.
     self.buttonViews = @[[self createButtonsView], [self createButtonsView]];
-
+    
     // Set up main content area.
     UIView *contentView = [[UIView alloc] initWithFrame:scrollView.bounds];
     contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     contentView.backgroundColor = [UIColor whiteColor];
     [scrollView addSubview:contentView];
     self.scrollViewContentView = contentView;
-
+    
     // Put a label in the scroll view content area.
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectInset(contentView.bounds, 10, 0)];
     label.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [self.scrollViewContentView addSubview:label];
     self.scrollViewLabel = label;
-
+    
     // Listen for events that tell cells to hide their buttons.
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(handleCloseEvent:)
@@ -159,7 +176,7 @@ CGFloat const kSwipeableTableViewCellOpenVelocityThreshold = 0.6;
     if ((self.leftInset == 0 && scrollView.contentOffset.x < 0) || (self.rightInset == 0 && scrollView.contentOffset.x > 0)) {
         scrollView.contentOffset = CGPointZero;
     }
-
+    
     UIView *leftView = self.buttonViews[SwipeableTableViewCellSideLeft];
     UIView *rightView = self.buttonViews[SwipeableTableViewCellSideRight];
     if (scrollView.contentOffset.x < 0) {
@@ -193,7 +210,7 @@ CGFloat const kSwipeableTableViewCellOpenVelocityThreshold = 0.6;
         targetContentOffset->x = right;
     } else {
         *targetContentOffset = CGPointZero;
-
+        
         // If the scroll isn't on a fast path to zero, animate it instead.
         CGFloat ms = x / -velocity.x;
         if (velocity.x == 0 || ms < 0 || ms > kSwipeableTableViewCellMaxCloseMilliseconds) {
@@ -212,5 +229,25 @@ CGFloat const kSwipeableTableViewCellOpenVelocityThreshold = 0.6;
     self.scrollView.contentSize = self.contentView.bounds.size;
     self.scrollView.contentOffset = CGPointZero;
 }
+
+- (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated
+{
+    if(highlighted)
+        [self.backgroundView setBackgroundColor:[UIColor redColor]];
+    else
+        [self.backgroundView setBackgroundColor:[UIColor whiteColor]];
+}
+
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated
+{
+    
+}
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+{
+    [[self class] closeAllCellsExcept:nil];
+    [super touchesBegan:touches withEvent:event];
+}
+
 
 @end
